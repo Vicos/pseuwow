@@ -1,0 +1,12 @@
+PseuWoW is a custom opensource MMORPG client that allows to connect to certain
+server programs like MaNGOS.
+Please note that PseuWoW officially supports MaNGOS only, for now.
+
+http://www.mangosclient.org
+
+Compilation & installation on Linux
+$ autoreconf -f -i
+$ ./configure
+$ make
+$ make install
+
