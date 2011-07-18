@@ -63,7 +63,7 @@ void DrawObject::_Init(void)
             char buf[1000];
             MemoryDataHolder::MakeModelFilename(buf, modelfilename);
             modelfilename = buf;
-            logdebug("Unit %s", modelfilename);
+//            logdebug("Unit %s", modelfilename);
 //             if (cdi && strcmp(cdi->GetString(displayid,"name1"), "") != 0) 
 //                 texturename = std::string("data/texture/") + cdi->GetString(displayid,"name1");
             opacity = cdi && displayid ? cdi->GetUint32(displayid,"opacity") : 255;
