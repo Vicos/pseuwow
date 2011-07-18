@@ -7,6 +7,6 @@ libshared_a_SOURCES = 	ADTFile.cpp       common.h      log.h        MapTile.h   
 ADTFile.h         DebugStuff.h  ProgressBar.cpp  tools.h      ZCompressor.cpp\
 ADTFileStructs.h  libshared.a   ProgressBar.h    WDTFile.cpp  ZCompressor.h\
 ByteBuffer.h      log.cpp       MapTile.cpp  SysDefs.h        WDTFile.h\
-dbcfile.cpp  Locale.cpp  MPQFile.cpp  MPQHelper.cpp  
+dbcfile.cpp  LocaleDetector.cpp  MPQFile.cpp  MPQHelper.cpp  
 
 
