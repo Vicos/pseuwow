@@ -1,7 +1,16 @@
 ## Process this file with automake to produce Makefile.in
-AM_CPPFLAGS = -I$(top_builddir)/src/Client -I$(top_builddir)/src/shared -I$(top_builddir)/src/Client/DefScript -I$(top_builddir)/src/Client/World -I$(top_builddir)/src/Client/Realm  -Wall -D__SYS_ZLIB
+AM_CPPFLAGS = -I$(top_builddir)/src/Client \
+              -I$(top_builddir)/src/shared \
+              -I$(top_builddir)/src/Client/DefScript \
+              -I$(top_builddir)/src/Client/World \
+              -I$(top_builddir)/src/Client/Realm  \
+              -Wall \
+              -D__SYS_ZLIB
+
 AM_CFLAGS = -fPIC
+
 ## Build pseuwow
+INCLUDES = -I../../include/StormLib -I../../include
 noinst_LIBRARIES = libstormlib.a
 libstormlib_a_SOURCES =huffman/huff.cpp\
 					wave/wave.cpp\
