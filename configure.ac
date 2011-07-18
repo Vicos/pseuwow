@@ -21,6 +21,7 @@ AC_CHECK_LIB([GL], [main], [], [echo "ERROR: GL library not found." && exit 1])
 AC_CHECK_LIB([GLU], [main], [], [echo "ERROR: GLU library not found." && exit 1])
 AC_CHECK_LIB([ssl], [main], [], [echo "ERROR: ssl library not found." && exit 1])
 AC_CHECK_LIB([crypto], [main], [], [echo "ERROR: ssl crypto library not found." && exit 1])
+AC_CHECK_LIB([bz2], [main], [], [echo "ERROR: bzip2 library not found." && exit 1])
 
 # Checks for header files.
 AC_PATH_X
@@ -57,7 +58,6 @@ AC_FUNC_UTIME_NULL
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([floor ftime ftruncate getcwd gethostbyaddr gethostbyname gethostname gettimeofday memmove memset mkdir pow realpath select socket sqrt strerror strrchr strstr strtol strtoul uname utime])
 
-
 # Check if IrrKlang stub needs to be built
 
 AC_ARG_WITH(irrklang,
@@ -77,7 +77,7 @@ if test "x$DO_IRRKLANG" = "xyes"; then
 else
   AC_MSG_RESULT($DO_IRRKLANG)
   IRRKLANG_DIR=
-  IRRKLANG_LIB=$(prefix)/bin/libIrrKlang.so
+  IRRKLANG_LIB=${prefix}/bin/libIrrKlang.so
 fi
 AC_SUBST([IRRKLANG_DIR])
 AC_SUBST([IRRKLANG_LIB])
