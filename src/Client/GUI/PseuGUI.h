@@ -1,6 +1,11 @@
 #ifndef PSEUGUI_H
 #define PSEUGUI_H
 
+#ifndef IMPLEMENT_GUI
+#include "PseuGUIstub.h"
+
+#else
+
 #include "irrlicht/irrlicht.h"
 #include "irrklang/irrKlang.h"
 #include "SceneData.h"
@@ -134,7 +139,7 @@ private:
 
 };
 
-
+#endif
 
 #endif
 
