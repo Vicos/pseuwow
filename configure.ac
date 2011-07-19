@@ -58,8 +58,17 @@ AC_FUNC_UTIME_NULL
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([floor ftime ftruncate getcwd gethostbyaddr gethostbyname gethostname gettimeofday memmove memset mkdir pow realpath select socket sqrt strerror strrchr strstr strtol strtoul uname utime])
 
-# Check if IrrKlang stub needs to be built
+# GUI interface
+AC_ARG_ENABLE([gui],
+    AS_HELP_STRING([--disable-gui], [Disable GUI - Graphic User Interface]))
 
+AM_CONDITIONAL(IMPLEMENT_GUI, test "x$enable_gui" != "xno")
+
+#AS_IF([test "x$enable_gui" != "xno"], [
+#  AC_DEFINE([IMPLEMENT_GUI], [], [Enable compilation of GUI code])
+#])
+
+# Check if IrrKlang stub needs to be built
 AC_ARG_WITH(irrklang,
 [  --with-irrklang            Use IrrKlang stub (needed for x64 (default: no)],
 [case "${withval}" in
@@ -82,25 +91,24 @@ fi
 AC_SUBST([IRRKLANG_DIR])
 AC_SUBST([IRRKLANG_LIB])
 
-
-
-AC_CONFIG_FILES([Makefile
-		 src/Makefile
-		 src/dep/Makefile
-         src/dep/src/Makefile
-		 src/dep/src/zlib/Makefile
-		 src/dep/src/zthread/Makefile
-         src/dep/src/irrKlang/Makefile
-         src/dep/src/StormLib/Makefile
-         src/tools/Makefile
-         src/tools/viewer/Makefile
-		 src/tools/stuffextract/Makefile
-		 src/shared/Makefile
-		 src/shared/Auth/Makefile
-		 src/shared/Network/Makefile
-		 src/Client/Makefile
-		 src/Client/GUI/Makefile
-		 src/Client/Realm/Makefile
-		 src/Client/World/Makefile
-		 src/Client/DefScript/Makefile])
+AC_CONFIG_FILES([
+    Makefile
+    src/Makefile
+    src/dep/Makefile
+    src/dep/src/Makefile
+    src/dep/src/zlib/Makefile
+    src/dep/src/zthread/Makefile
+    src/dep/src/irrKlang/Makefile
+    src/dep/src/StormLib/Makefile
+    src/tools/Makefile
+    src/tools/viewer/Makefile
+    src/tools/stuffextract/Makefile
+    src/shared/Makefile
+    src/shared/Auth/Makefile
+    src/shared/Network/Makefile
+    src/Client/Makefile
+    src/Client/GUI/Makefile
+    src/Client/Realm/Makefile
+    src/Client/World/Makefile
+    src/Client/DefScript/Makefile])
 AC_OUTPUT
