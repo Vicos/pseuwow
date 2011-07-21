@@ -10,15 +10,16 @@ FILE *logfile = NULL;
 uint8 loglevel = 0;
 bool logtime = false;
 
+void _log(uint8 lvl, Color color, bool to_stdout, const char *msg);
+void _log_setcolor(bool,Color);
+void _log_resetcolor(bool);
+
 void log_prepare(const char *fn, const char *mode = NULL)
 {
     if(!mode)
         mode = "a";
     if(logfile)
-    {
-        fflush(logfile);
         fclose(logfile);
-    }
     logfile = fopen(fn,mode);
 }
 
@@ -32,196 +33,112 @@ void log_setlogtime(bool b)
     logtime = b;
 }
 
-void log(const char *str, ...)
+void log(const char *format, ...)
 {
-    if(!str)
-        return;
-    va_list ap;
-    _log_setcolor(true,GREY);
-    if(logtime)
-        printf("%s ", GetTimeString().c_str());
-    va_start(ap, str);
-    vprintf( str, ap );
-    va_end(ap);
-    _log_resetcolor(true);
+    char msg[1024];
+    va_list argptr;
+    
+    va_start(argptr, format);
+    vsprintf(msg, format, argptr);
+    va_end(argptr);
 
-    printf("\n");
-
-    if(logfile)
-    {
-        fprintf(logfile, "%s", getDateString().c_str());
-        va_start(ap, str);
-        vfprintf(logfile, str, ap);
-        fprintf(logfile, "\n" );
-        va_end(ap);
-        fflush(logfile);
-    }
-    fflush(stdout);
+    _log(loglevel,GREY,true,msg);
 }
 
-void logdetail(const char *str, ...)
+void logdetail(const char *format, ...)
 {
-    if(!str || loglevel < 1)
-        return;
-    va_list ap;
-    _log_setcolor(true,LCYAN);
-    if(logtime)
-        printf("%s ", GetTimeString().c_str());
-    va_start(ap, str);
-    vprintf( str, ap );
-    va_end(ap);
-    _log_resetcolor(true);
+    char msg[1024];
+    va_list argptr;
+    
+    va_start(argptr, format);
+    vsprintf(msg, format, argptr);
+    va_end(argptr);
 
-    printf("\n");
-
-    if(logfile)
-    {
-        fprintf(logfile, "%s", getDateString().c_str());
-        va_start(ap, str);
-        vfprintf(logfile, str, ap);
-        fprintf(logfile, "\n" );
-        va_end(ap);
-        fflush(logfile);
-    }
-    fflush(stdout);
+    _log(1,LCYAN,true,msg);
 }
 
-void logdebug(const char *str, ...)
+void logdebug(const char *format, ...)
 {
-    if(!str || loglevel < 2)
-        return;
-    va_list ap;
-    _log_setcolor(true,LBLUE);
-    if(logtime)
-        printf("%s ", GetTimeString().c_str());
-    va_start(ap, str);
-    vprintf( str, ap );
-    va_end(ap);
-    _log_resetcolor(true);
+    char msg[1024];
+    va_list argptr;
+    
+    va_start(argptr, format);
+    vsprintf(msg, format, argptr);
+    va_end(argptr);
 
-
-    printf("\n");
-
-    if(logfile)
-    {
-        fprintf(logfile, "%s", getDateString().c_str());
-        va_start(ap, str);
-        vfprintf(logfile, str, ap);
-        fprintf(logfile, "\n" );
-        va_end(ap);
-        fflush(logfile);
-    }
-    fflush(stdout);
+    _log(2,LBLUE,true,msg);
 }
 
-void logdev(const char *str, ...)
+void logdev(const char *format, ...)
 {
-	if(!str || loglevel < 3)
-		return;
-	va_list ap;
-	_log_setcolor(true,LMAGENTA);
-    if(logtime)
-        printf("%s ", GetTimeString().c_str());
-	va_start(ap, str);
-	vprintf( str, ap );
-	va_end(ap);
-	_log_resetcolor(true);
+    char msg[1024];
+    va_list argptr;
+    
+    va_start(argptr, format);
+    vsprintf(msg, format, argptr);
+    va_end(argptr);
 
-
-	printf("\n");
-
-	if(logfile)
-	{
-		fprintf(logfile, "%s", getDateString().c_str());
-		va_start(ap, str);
-		vfprintf(logfile, str, ap);
-		fprintf(logfile, "\n" );
-		va_end(ap);
-		fflush(logfile);
-	}
-	fflush(stdout);
+    _log(3,LMAGENTA,true,msg);
 }
 
-void logerror(const char *str, ...)
+void logerror(const char *format, ...)
 {
-    va_list ap;
-    _log_setcolor(false,LRED);
-    if(logtime)
-        printf("%s ", GetTimeString().c_str());
-    va_start(ap, str);
-    vfprintf( stderr,  str, ap );
-    va_end(ap);
-    _log_resetcolor(false);
+    char msg[1024];
+    va_list argptr;
+    
+    va_start(argptr, format);
+    vsprintf(msg, format, argptr);
+    va_end(argptr);
 
-    fprintf(stderr,"\n");
-
-    if(logfile)
-    {
-        fprintf(logfile, "%s", getDateString().c_str());
-        va_start(ap, str);
-        vfprintf(logfile, str, ap);
-        fprintf(logfile, "\n" );
-        va_end(ap);
-        fflush(logfile);
-    }
-    fflush(stdout);
+    _log(loglevel,LRED,false,msg);
 }
 
-void logcritical(const char *str, ...)
+void logcritical(const char *format, ...)
 {
-    va_list ap;
-    _log_setcolor(false,RED);
-    if(logtime)
-        printf("%s ", GetTimeString().c_str());
-    va_start(ap, str);
-    vfprintf( stderr, str, ap );
-    va_end(ap);
-    _log_resetcolor(false);
+    char msg[1024];
+    va_list argptr;
+    
+    va_start(argptr, format);
+    vsprintf(msg, format, argptr);
+    va_end(argptr);
 
-    fprintf(stderr,"\n");
-
-    if(logfile)
-    {
-        fprintf(logfile, "%s", getDateString().c_str());
-        va_start(ap, str);
-        vfprintf(logfile, str, ap);
-        fprintf(logfile, "\n" );
-        va_end(ap);
-        fflush(logfile);
-    }
-    fflush(stdout);
+    _log(loglevel,RED,false,msg);
 }
 
-void logcustom(uint8 lvl, Color color, const char *str, ...)
+void logcustom(uint8 lvl, Color color, const char *format, ...)
 {
-    if(!str || loglevel < lvl)
-        return;
-    va_list ap;
-    _log_setcolor(true,color);
-    if(logtime)
-        printf("%s ", GetTimeString().c_str());
-    va_start(ap, str);
-    vprintf( str, ap );
-    va_end(ap);
-    _log_resetcolor(true);
+    char msg[1024];
+    va_list argptr;
+    
+    va_start(argptr, format);
+    vsprintf(msg, format, argptr);
+    va_end(argptr);
 
-    printf("\n");
-
-    if(logfile)
-    {
-        fprintf(logfile, "%s", getDateString().c_str());
-        va_start(ap, str);
-        vfprintf(logfile, str, ap);
-        fprintf(logfile, "\n" );
-        va_end(ap);
-        fflush(logfile);
-    }
-    fflush(stdout);
+    _log(loglevel,color,true,msg);
 }
 
 void log_close()
 {
 	fclose(logfile);
+}
+
+void _log(uint8 lvl, Color color, bool to_stdout, const char *msg)
+{
+    if(!msg || loglevel < lvl)
+        return;
+    _log_setcolor(to_stdout,color);
+    if(logtime)
+        printf("%s ", GetTimeString().c_str());
+    printf("%s\n",msg);
+    _log_resetcolor(true);
+    fflush(stdout);
+    
+    if(logfile)
+    {
+        fprintf(logfile, "%s", getDateString().c_str());
+        fprintf(logfile, "%s\n", msg);
+        fflush(logfile);
+    }
 }
 
 void _log_setcolor(bool stdout_stream, Color color)

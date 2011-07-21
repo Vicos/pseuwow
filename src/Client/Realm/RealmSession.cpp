@@ -677,9 +677,7 @@ void RealmSession::_HandleTransferData(ByteBuffer& pkt)
             logdebug("Got data packet, %u data bytes. [%.2f%% done]  cmd 0x%X",size,pct,cmd);
         else
         {
-            _log_setcolor(true,GREEN);
-            printf("\r[%.2f%% done]",pct);
-            _log_resetcolor(true);
+            log("\r[%.2f%% done]",pct);
         }
 
     }

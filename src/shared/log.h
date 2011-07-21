@@ -31,9 +31,6 @@ void logerror(const char *str, ...);
 void logcritical(const char *str, ...);
 void logcustom(uint8 loglevel, Color color, const char *str, ...);
 void log_close();
-void _log_setcolor(bool,Color);
-void _log_resetcolor(bool);
-
 
 const int Color_count = int(WHITE)+1;
 
