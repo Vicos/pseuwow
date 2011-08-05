@@ -16,9 +16,6 @@ AC_PROG_RANLIB
 AC_PROG_LIBTOOL
 
 # Checks for libraries.
-AC_CHECK_LIB([Xxf86vm], [main], [], [echo "ERROR: Xxf86vm library not found." && exit 1])
-AC_CHECK_LIB([GL], [main], [], [echo "ERROR: GL library not found." && exit 1])
-AC_CHECK_LIB([GLU], [main], [], [echo "ERROR: GLU library not found." && exit 1])
 AC_CHECK_LIB([ssl], [main], [], [echo "ERROR: ssl library not found." && exit 1])
 AC_CHECK_LIB([crypto], [main], [], [echo "ERROR: ssl crypto library not found." && exit 1])
 AC_CHECK_LIB([bz2], [main], [], [echo "ERROR: bzip2 library not found." && exit 1])
@@ -64,9 +61,11 @@ AC_ARG_ENABLE([gui],
 
 AM_CONDITIONAL(IMPLEMENT_GUI, test "x$enable_gui" != "xno")
 
-#AS_IF([test "x$enable_gui" != "xno"], [
-#  AC_DEFINE([IMPLEMENT_GUI], [], [Enable compilation of GUI code])
-#])
+AS_IF([test "x$enable_gui" != "xno"], [
+	AC_CHECK_LIB([Xxf86vm], [main], [], [echo "ERROR: Xxf86vm library not found." && exit 1])
+	AC_CHECK_LIB([GL], [main], [], [echo "ERROR: GL library not found." && exit 1])
+	AC_CHECK_LIB([GLU], [main], [], [echo "ERROR: GLU library not found." && exit 1])
+])
 
 # Check if IrrKlang stub needs to be built
 AC_ARG_WITH(irrklang,
