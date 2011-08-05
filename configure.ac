@@ -62,9 +62,9 @@ AC_ARG_ENABLE([gui],
 AM_CONDITIONAL(IMPLEMENT_GUI, test "x$enable_gui" != "xno")
 
 AS_IF([test "x$enable_gui" != "xno"], [
-	AC_CHECK_LIB([Xxf86vm], [main], [], [echo "ERROR: Xxf86vm library not found." && exit 1])
-	AC_CHECK_LIB([GL], [main], [], [echo "ERROR: GL library not found." && exit 1])
-	AC_CHECK_LIB([GLU], [main], [], [echo "ERROR: GLU library not found." && exit 1])
+	AC_CHECK_LIB([Xxf86vm], [main], [], AC_MSG_ERROR(Xxf86vm headers not found.))
+	AC_CHECK_LIB([GL], [main], [], AC_MSG_ERROR(GL headers not found.))
+	AC_CHECK_LIB([GLU], [main], [], AC_MSG_ERROR(GLU headers not found.))
 ])
 
 # Check if IrrKlang stub needs to be built
