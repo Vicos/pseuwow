@@ -8,7 +8,7 @@ class CliRunnable : public ZThread::Runnable
 public:
     CliRunnable(PseuInstance*);
     void run(void);
-    void stop() { _stop=true; }
+    void stop(void);
 
 private:
     bool _stop;

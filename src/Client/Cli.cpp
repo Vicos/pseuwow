@@ -40,3 +40,9 @@ void CliRunnable::run(void)
         }
     }
 }
+
+void CliRunnable::stop(void)
+{
+	_stop=true;
+	log("Shutting down CLI...");
+}

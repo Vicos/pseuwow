@@ -110,11 +110,10 @@ int main(int argc, char* argv[])
         //...
         t.wait();
         //...
-        log_close();
         MemoryDataHolder::Shutdown();
         _UnhookSignals();
-        raise(SIGABRT);  // this way to terminate is not nice but the only way to quit the CLI thread
         raise(SIGQUIT);
+		log_close();
         return 0;
 	} 
     catch (...)

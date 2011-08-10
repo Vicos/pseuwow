@@ -29,3 +29,11 @@ void CliRunnable::run(void)
 		free(in);
     }
 }
+
+void CliRunnable::stop(void)
+{
+	_stop=true;
+	rl_free_line_state();
+	rl_cleanup_after_signal();
+	log("Shutting down CLI...");
+}
