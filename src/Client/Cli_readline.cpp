@@ -1,4 +1,5 @@
 #include <readline/readline.h>
+#include <readline/history.h>
 
 #include "common.h"
 #include "DefScript/DefScript.h"
@@ -18,7 +19,13 @@ void CliRunnable::run(void)
     while(!_stop)
     {
 		in = readline("> ");
-		_instance->AddCliCommand(in);
+
+		if(*in)
+		{
+			add_history(in);
+			_instance->AddCliCommand(in);
+		}
+		
 		free(in);
     }
 }
