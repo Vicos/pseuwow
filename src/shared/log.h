@@ -1,6 +1,8 @@
 #ifndef _LOG_H
 #define _LOG_H
 
+#define MAX_MSG_LENGTH 1024
+
 enum Color
 {
     BLACK,

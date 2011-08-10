@@ -13,12 +13,15 @@ FILE *logfile = NULL;
 uint8 loglevel = 0;
 bool logtime = false;
 
-void _log(uint8 lvl, Color color, bool to_stdout, const char *msg);
+void _log(uint8 lvl, Color color, bool to_stdout, const char *format, va_list ap);
 void _log_setcolor(bool,Color);
 void _log_resetcolor(bool);
 
 void log_prepare(const char *fn, const char *mode = NULL)
 {
+	rl_initialize();
+	rl_prep_terminal(0);
+	
     if(!mode)
         mode = "a";
     if(logfile)
@@ -38,105 +41,89 @@ void log_setlogtime(bool b)
 
 void log(const char *format, ...)
 {
-    char msg[1024];
-    va_list argptr;
+    va_list ap;
     
-    va_start(argptr, format);
-    vsprintf(msg, format, argptr);
-    va_end(argptr);
-
-    _log(loglevel,GREY,true,msg);
+    va_start(ap, format);
+    _log(loglevel,WHITE,true,format,ap);
+    va_end(ap);
 }
 
 void logdetail(const char *format, ...)
 {
-    char msg[1024];
-    va_list argptr;
+    va_list ap;
     
-    va_start(argptr, format);
-    vsprintf(msg, format, argptr);
-    va_end(argptr);
-
-    _log(1,LCYAN,true,msg);
+    va_start(ap, format);
+    _log(1,LCYAN,true,format,ap);
+    va_end(ap);
 }
 
 void logdebug(const char *format, ...)
 {
-    char msg[1024];
-    va_list argptr;
+    va_list ap;
     
-    va_start(argptr, format);
-    vsprintf(msg, format, argptr);
-    va_end(argptr);
-
-    _log(2,LBLUE,true,msg);
+    va_start(ap, format);
+    _log(2,LBLUE,true,format,ap);
+    va_end(ap);
 }
 
 void logdev(const char *format, ...)
 {
-    char msg[1024];
-    va_list argptr;
+    va_list ap;
     
-    va_start(argptr, format);
-    vsprintf(msg, format, argptr);
-    va_end(argptr);
-
-    _log(3,LMAGENTA,true,msg);
+    va_start(ap, format);
+    _log(3,LMAGENTA,true,format,ap);
+    va_end(ap);
 }
 
 void logerror(const char *format, ...)
 {
-    char msg[1024];
-    va_list argptr;
+    va_list ap;
     
-    va_start(argptr, format);
-    vsprintf(msg, format, argptr);
-    va_end(argptr);
-
-    _log(loglevel,LRED,false,msg);
+    va_start(ap, format);
+    _log(loglevel,LRED,false,format,ap);
+    va_end(ap);
 }
 
 void logcritical(const char *format, ...)
 {
-    char msg[1024];
-    va_list argptr;
+    va_list ap;
     
-    va_start(argptr, format);
-    vsprintf(msg, format, argptr);
-    va_end(argptr);
-
-    _log(loglevel,RED,false,msg);
+    va_start(ap, format);
+    _log(loglevel,RED,false,format,ap);
+    va_end(ap);
 }
 
 void logcustom(uint8 lvl, Color color, const char *format, ...)
 {
-    char msg[1024];
-    va_list argptr;
+    va_list ap;
     
-    va_start(argptr, format);
-    vsprintf(msg, format, argptr);
-    va_end(argptr);
-
-    _log(loglevel,color,true,msg);
+    va_start(ap, format);
+    _log(loglevel,color,true,format,ap);
+    va_end(ap);
 }
 
 void log_close()
 {
 	fclose(logfile);
+	rl_deprep_terminal();
 }
 
-void _log(uint8 lvl, Color color, bool to_stdout, const char *msg)
+void _log(uint8 lvl, Color color, bool to_stdout, const char *format, va_list ap)
 {
-    if(!msg || loglevel < lvl)
-        return;
+	char msg[MAX_MSG_LENGTH];
 	
-    _log_setcolor(to_stdout,color);
+    if(loglevel < lvl)
+        return;
+
+	vsnprintf(msg, sizeof(msg), format, ap);
+	
+	_log_setcolor(to_stdout,color);	
 	if(logtime)
         printf("%s\r%s %s\n", DELETE_LINE, GetTimeString().c_str(), msg);
 	else
 		printf("%s\r%s\n", DELETE_LINE, msg);
-    _log_resetcolor(true);
-
+	_log_resetcolor(true);
+	
     fflush(stdout);
 
 	rl_forced_update_display();
