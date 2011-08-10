@@ -44,7 +44,7 @@ void log(const char *format, ...)
     va_list ap;
     
     va_start(ap, format);
-    _log(loglevel,WHITE,true,format,ap);
+    _log(loglevel,GREY,true,format,ap);
     va_end(ap);
 }
 
