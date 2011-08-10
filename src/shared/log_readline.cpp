@@ -129,13 +129,14 @@ void _log(uint8 lvl, Color color, bool to_stdout, const char *msg)
 {
     if(!msg || loglevel < lvl)
         return;
-	rl_reset_line_state();
 	
     _log_setcolor(to_stdout,color);
-    if(logtime)
-        printf("%s\r%s ", DELETE_LINE, GetTimeString().c_str());
-    printf("%s\n",msg);
+	if(logtime)
+        printf("%s\r%s %s\n", DELETE_LINE, GetTimeString().c_str(), msg);
+	else
+		printf("%s\r%s\n", DELETE_LINE, msg);
     _log_resetcolor(true);
+
     fflush(stdout);
 
 	rl_forced_update_display();
