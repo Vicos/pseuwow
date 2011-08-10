@@ -2,9 +2,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.61)
-AC_INIT(FULL-PACKAGE-NAME, VERSION, BUG-REPORT-ADDRESS)
-AM_INIT_AUTOMAKE(pseuwow, 0.1)
-#AC_CONFIG_SRCDIR([src/shared/ProgressBar.h])
+AC_INIT([pseuwow], [0.1], [])
+AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER([src/config.h])
 
 # Checks for programs.
@@ -12,13 +11,18 @@ AC_PROG_CXX
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LN_S
-AC_PROG_RANLIB
 AC_PROG_LIBTOOL
+LT_INIT
 
 # Checks for libraries.
-AC_CHECK_LIB([ssl], [main], [], [echo "ERROR: ssl library not found." && exit 1])
-AC_CHECK_LIB([crypto], [main], [], [echo "ERROR: ssl crypto library not found." && exit 1])
-AC_CHECK_LIB([bz2], [main], [], [echo "ERROR: bzip2 library not found." && exit 1])
+AC_CHECK_LIB([ssl], [main], [], AC_MSG_ERROR(ssl library not found.) )
+AC_CHECK_LIB([crypto], [main], [], AC_MSG_ERROR(ssl crypto library not found.))
+AC_CHECK_LIB([bz2], [main], [], AC_MSG_ERROR(bzip2 library not found.))
+
+AC_CHECK_LIB([readline], [readline],
+  [AC_DEFINE([HAVE_READLINE],[1],[Define to 1 if you have the readline library.])],
+  AC_MSG_WARN(readline library not found.))
+AM_CONDITIONAL(HAVE_READLINE, test "x$ac_cv_lib_readline_readline" = "xyes")
 
 # Checks for header files.
 AC_PATH_X
@@ -110,4 +114,5 @@ AC_CONFIG_FILES([
     src/Client/Realm/Makefile
     src/Client/World/Makefile
     src/Client/DefScript/Makefile])
+
 AC_OUTPUT

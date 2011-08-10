@@ -15,8 +15,7 @@ AM_CPPFLAGS =   -I$(top_builddir)/src/Client \
 
 ## Build pseuwow
 bin_PROGRAMS = pseuwow
-pseuwow_SOURCES = 	Cli.cpp\
-			        DefScriptInterface.cpp\
+pseuwow_SOURCES = 	DefScriptInterface.cpp\
 			        MemoryDataHolder.cpp\
 			        RemoteController.cpp\
 			        ControlSocket.cpp\
@@ -38,6 +37,13 @@ pseuwow_LDADD =     ../shared/libshared.a \
 				    ../dep/src/zthread/libZThread.a \
 				    ../dep/src/StormLib/libstormlib.a \
 				    -lbz2
+
+if HAVE_READLINE
+pseuwow_LDADD 	+=	-lreadline
+pseuwow_SOURCES +=	Cli_readline.cpp
+else
+pseuwow_SOURCES +=	Cli.cpp
+endif
 
 if IMPLEMENT_GUI
 pseuwow_LDADD +=    GUI/libgui.a \
