@@ -353,8 +353,12 @@ void PseuInstance::Update()
         else
         {   // everything fine, we have all data
             logdetail("Waiting %u ms before reconnecting.",GetConf()->reconnect);
-            for(uint32 t = 0; t < GetConf()->reconnect && !this->Stopped(); t+=100) Sleep(100);
-            this->Sleep(1000); // wait 1 sec before reconnecting
+            for(uint32 t = 0; t < GetConf()->reconnect &&
+                !this->Stopped(); t+=GetConf()->networksleeptime)
+			{
+				this->Sleep(GetConf()->networksleeptime);
+				ProcessCliQueue();
+			}
             CreateRealmSession();
         }
     }
