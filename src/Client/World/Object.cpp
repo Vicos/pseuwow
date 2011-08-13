@@ -114,7 +114,8 @@ void WorldSession::_HandleDestroyObjectOpcode(WorldPacket& recvPacket)
     logdebug("Destroy Object "I64FMT,guid);
 
     // call script just before object removal
-    if(GetInstance()->GetScripts()->ScriptExists("_onobjectdelete"))
+	// TODO reimplemente with LUA
+    /* if(GetInstance()->GetScripts()->ScriptExists("_onobjectdelete"))
     {
         Object *o = objmgr.GetObj(guid);
         CmdSet Set;
@@ -122,7 +123,7 @@ void WorldSession::_HandleDestroyObjectOpcode(WorldPacket& recvPacket)
         Set.arg[0] = o ? toString(o->GetTypeId()) : "";
         Set.arg[1] = "false"; // out of range = false
         GetInstance()->GetScripts()->RunScript("_onobjectdelete", &Set);
-    }
+    } */
 
     objmgr.Remove(guid, false);
 }

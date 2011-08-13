@@ -29,7 +29,8 @@ void ControlSocket::OnAccept(void)
         return;
     }
 
-    SendTelnetText(_instance->GetScripts()->variables.Get("@version"));
+	// TODO reimplemente with LUA
+    //SendTelnetText(_instance->GetScripts()->variables.Get("@version"));
     if(_instance->GetConf()->rmcontrolpass.size())
     {
         SendTelnetText("Authentication?");
@@ -73,10 +74,11 @@ void ControlSocket::OnRead(void)
             }
             else if(buf[i] == 10 || buf[i] == 13 || buf[i] == 0) // newline or \0 char
             {
-                if(_str.length() && _instance && _instance->GetScripts())
+				// TODO reimplemente with LUA
+                /* if(_str.length() && _instance && _instance->GetScripts())
                 {
                     HandleString(_str);
-                }
+                } */
                 _str.clear();
             }
             else
@@ -98,7 +100,8 @@ void ControlSocket::SendTelnetText(std::string s)
 
 void ControlSocket::_Execute(std::string s)
 {
-    DefReturnResult r = _instance->GetScripts()->RunSingleLine(s);
+	// TODO reimplemente with LUA
+	/* DefReturnResult r = _instance->GetScripts()->RunSingleLine(s);
     if(r.ok)
     {
         std::stringstream ss;
@@ -109,6 +112,7 @@ void ControlSocket::_Execute(std::string s)
     }
     else
         SendTelnetText("+ERR");
+	*/
 }
 
 void ControlSocket::HandleString(std::string s)

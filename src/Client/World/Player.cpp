@@ -5,7 +5,6 @@
 #include "Opcodes.h"
 #include "SharedDefines.h"
 #include "Player.h"
-#include "DefScript/DefScript.h"
 #include "WorldSession.h"
 
 

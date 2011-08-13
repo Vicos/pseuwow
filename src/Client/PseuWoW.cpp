@@ -4,10 +4,8 @@
 #include <openssl/rand.h>
 
 #include "ByteBuffer.h"
-#include "DefScript/DefScript.h"
 #include "DefScriptInterface.h"
 #include "Auth/BigNumber.h"
-#include "DefScript/DefScript.h"
 #include "RealmSession.h"
 #include "WorldSession.h"
 #include "CacheHandler.h"
@@ -28,7 +26,6 @@ void PseuInstanceRunnable::run(void)
 {
     _i = new PseuInstance(this);
     _i->SetConfDir("./conf/");
-    _i->SetScpDir("./scripts/");
     if(_i->Init())
     {
         _i->Run();
@@ -52,8 +49,8 @@ PseuInstance::PseuInstance(PseuInstanceRunnable *run)
     _ver_short="A13.51" DEBUG_APPENDIX;
     _wsession=NULL;
     _rsession=NULL;
-    _scp=NULL;
     _conf=NULL;
+	_script=NULL;
     _cli=NULL;
     _rmcontrol=NULL;
     _gui=NULL;
@@ -96,7 +93,7 @@ PseuInstance::~PseuInstance()
     if(_wsession)
         delete _wsession;
 
-    delete _scp;
+    delete _script;
     delete _conf;
 
     for(uint32 i = 0; i < COND_MAX; i++)
@@ -115,17 +112,12 @@ bool PseuInstance::Init(void)
 
     if(_confdir.empty())
         _confdir="./conf/";
-    if(_scpdir.empty())
-        _scpdir="./scripts/";
 
     srand((unsigned)time(NULL));
     RAND_set_rand_method(RAND_SSLeay()); // init openssl randomizer
 
-    _scp=new DefScriptPackage();
-    _scp->SetParentMethod((void*)this);
-    _conf=new PseuInstanceConf();
-
-    _scp->SetPath(_scpdir);
+    _script = new LuaPackage();
+    _conf = new PseuInstanceConf();
 
     CreateDir("cache");
 
@@ -133,20 +125,12 @@ bool PseuInstance::Init(void)
     dbmgr.AddSearchPath("./data/scp");
     dbmgr.SetCompression(6);
 
-    _scp->variables.Set("@version_short",_ver_short);
-    _scp->variables.Set("@version",_ver);
-    _scp->variables.Set("@inworld","false");
+	// TODO reimplement with LUA
+    //_scp->variables.Set("@version_short",_ver_short);
+    //_scp->variables.Set("@version",_ver);
+    //_scp->variables.Set("@inworld","false");
 
-    if(!_scp->LoadScriptFromFile("./_startup.def"))
-    {
-        logerror("Error loading '_startup.def'");
-        SetError();
-    }
-    else if(!_scp->BoolRunScript("_startup",NULL))
-    {
-        logerror("Error executing '_startup.def'");
-        SetError();
-    }
+    // TODO: execute LUA startup func
 
     // TODO: find a better loaction where to place this block!
     if(GetConf()->enablegui)
@@ -200,14 +184,15 @@ bool PseuInstance::InitGUI(void)
     uint8 driver;
     bool shadows,vsync,win,usesound;
 
-    driver=(uint8)atoi(GetScripts()->variables.Get("GUI::DRIVER").c_str());
-    vsync=(bool)atoi(GetScripts()->variables.Get("GUI::VSYNC").c_str());
-    depth=(uint8)atoi(GetScripts()->variables.Get("GUI::DEPTH").c_str());
-    x=(uint16)atoi(GetScripts()->variables.Get("GUI::RESX").c_str());
-    y=(uint16)atoi(GetScripts()->variables.Get("GUI::RESY").c_str());
-    win=(bool)atoi(GetScripts()->variables.Get("GUI::WINDOWED").c_str());
-    shadows=(bool)atoi(GetScripts()->variables.Get("GUI::SHADOWS").c_str());
-    usesound=(bool)atoi(GetScripts()->variables.Get("GUI::USESOUND").c_str());
+	// TODO reimplement with LUA
+    //driver=(uint8)atoi(GetScripts()->variables.Get("GUI::DRIVER").c_str());
+    //vsync=(bool)atoi(GetScripts()->variables.Get("GUI::VSYNC").c_str());
+    //depth=(uint8)atoi(GetScripts()->variables.Get("GUI::DEPTH").c_str());
+    //x=(uint16)atoi(GetScripts()->variables.Get("GUI::RESX").c_str());
+    //y=(uint16)atoi(GetScripts()->variables.Get("GUI::RESY").c_str());
+    //win=(bool)atoi(GetScripts()->variables.Get("GUI::WINDOWED").c_str());
+    //shadows=(bool)atoi(GetScripts()->variables.Get("GUI::SHADOWS").c_str());
+    //usesound=(bool)atoi(GetScripts()->variables.Get("GUI::USESOUND").c_str());
     log("GUI settings: driver=%u, depth=%u, res=%ux%u, windowed=%u, shadows=%u sound=%u",driver,depth,x,y,win,shadows,usesound);
     if(x>0 && y>0 && (depth==16 || depth==32) && driver>0 && driver<=5)
     {
@@ -290,12 +275,13 @@ void PseuInstance::Run(void)
         //...
     }
 
-    if(GetScripts()->ScriptExists("_onexit"))
+	// TODO reimplement with LUA
+    /* if(GetScripts()->ScriptExists("_onexit"))
     {
         CmdSet Set;
         Set.arg[0] = DefScriptTools::toString(_error);
         GetScripts()->RunScript("_onexit",&Set);
-    }
+    } */
 
     if(GetConf()->exitonerror == false && _error)
     {
@@ -393,7 +379,8 @@ void PseuInstance::Update()
         }
     }
 
-    GetScripts()->GetEventMgr()->Update();
+	// TODO reimplement with LUA
+	//GetScripts()->GetEventMgr()->Update();
 
     this->Sleep(GetConf()->networksleeptime);
 }
@@ -406,7 +393,8 @@ void PseuInstance::ProcessCliQueue(void)
         cmd = _cliQueue.next();
         try
         {
-            GetScripts()->RunSingleLine(cmd);
+			// TODO reimplement with LUA
+            //GetScripts()->RunSingleLine(cmd);
         }
         catch(...)
         {
@@ -443,9 +431,10 @@ void PseuInstance::DeleteGUI(void)
     _gui = NULL;
     delete _guithread; // since it was allocated with new
     _guithread = NULL;
-    if(GetScripts()->ScriptExists("_onguiclose"))
+	// TODO reimplement with LUA
+    /* if(GetScripts()->ScriptExists("_onguiclose"))
         AddCliCommand("_onguiclose"); // since this func is called from another thread, use threadsafe variant via CLI
-
+	*/
     // if console mode is disabled in windows, closing the gui needs to close the app
 #if PLATFORM == PLATFORM_WIN32 && !defined(_CONSOLE)
     this->Stop();
@@ -481,15 +470,39 @@ void PseuInstance::WaitForCondition(InstanceConditions c, uint32 timeout /* = 0 
 
 PseuInstanceConf::PseuInstanceConf()
 {
-    enablecli=false;
-    enablegui=false;
-    exitonerror=false;
-    debug=0;
-    rmcontrolport=0;
+    enablecli = false;
+    enablegui = false;
+    exitonerror = false;
+    debug = 0;
+    rmcontrolport = 0;
+    realmlist = "realm.com";
+    accname = "admin";
+    accpass = "admin";
+    exitonerror = false;
+    reconnect = true;
+    realmport = 3724;
+    uint8 clientversion[3];
+    //clientversion_string;
+    //clientbuild;
+    clientlang = "frFR";
+    realmname = "RealmName";
+    charname = "myChar";
+	networksleeptime = 10;
+    hidefreqopcodes = true;
+    hideDisabledOpcodes = true;
+    allowgamecmd = false;
+	enablecli = true;
+	notifyping = false;
+    showmyopcodes = false;
+    disablespellcheck = true;
+    useMPQ = false;
 }
 
 void PseuInstanceConf::ApplyFromVarSet(VarSet &v)
 {
+	// TODO reimplement with LUA
+	return;
+	
     debug=atoi(v.Get("DEBUG").c_str());
     realmlist=v.Get("REALMLIST");
     accname=v.Get("ACCNAME");

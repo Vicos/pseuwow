@@ -243,8 +243,9 @@ void Channel::HandleListRequest(WorldPacket& recvPacket)
     }
 
     // store list of GUIDs in: @ChannelList - see below
-    DefList *l = _worldSession->GetInstance()->GetScripts()->lists.Get("@ChannelList");
-    l->clear();
+	// TODO reimplemente with LUA
+    //DefList *l = _worldSession->GetInstance()->GetScripts()->lists.Get("@ChannelList");
+    //l->clear();
 
 	std::string pname;
 	bool muted,mod;
@@ -265,7 +266,8 @@ void Channel::HandleListRequest(WorldPacket& recvPacket)
 		logcustom(0,WHITE,"%s ["I64FMT"] %s %s",pname.c_str(),i->first,muted?"(muted)":"",mod?"(moderator)":"");
 
         // DefScript binding
-        l->push_back(DefScriptTools::toString(guid));
+		// TODO reimplemente with LUA
+        //l->push_back(DefScriptTools::toString(guid));
 	}
 }
 

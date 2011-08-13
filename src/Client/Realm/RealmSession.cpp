@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include "common.h"
 #include "Auth/Sha1.h"
 #include "Auth/BigNumber.h"
@@ -315,8 +317,9 @@ void RealmSession::SetRealmAddr(std::string host)
     GetInstance()->GetConf()->worldhost=host.substr(0,colonpos);
     GetInstance()->GetConf()->worldport=atoi(host.substr(colonpos+1,host.length()-colonpos-1).c_str());
     // set vars
-    GetInstance()->GetScripts()->variables.Set("WORLDHOST",GetInstance()->GetConf()->worldhost);
-    GetInstance()->GetScripts()->variables.Set("WORLDPORT",DefScriptTools::toString((uint64)(GetInstance()->GetConf()->worldport)));
+	// TODO clean former code
+    //GetInstance()->GetScripts()->variables.Set("WORLDHOST",GetInstance()->GetConf()->worldhost);
+    //GetInstance()->GetScripts()->variables.Set("WORLDPORT",DefScriptTools::toString((uint64)(GetInstance()->GetConf()->worldport)));
 }
 
 void RealmSession::SetLogonData(void)

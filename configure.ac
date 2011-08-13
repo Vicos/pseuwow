@@ -18,6 +18,7 @@ LT_INIT
 AC_CHECK_LIB([ssl], [main], [], AC_MSG_ERROR(ssl library not found.) )
 AC_CHECK_LIB([crypto], [main], [], AC_MSG_ERROR(ssl crypto library not found.))
 AC_CHECK_LIB([bz2], [main], [], AC_MSG_ERROR(bzip2 library not found.))
+AC_CHECK_LIB([lua5.1], [luaL_newstate], [], AC_MSG_ERROR(lua library not found.))
 
 AC_CHECK_LIB([readline], [readline],
   [AC_DEFINE([HAVE_READLINE],[1],[Define to 1 if you have the readline library.])],

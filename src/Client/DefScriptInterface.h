@@ -1,15 +1,7 @@
 #ifndef __DEFSCRIPTINTERFACE_H
 #define __DEFSCRIPTINTERFACE_H
 
-
-
-
-
-
-
-
-DefScriptFunctionTable *_GetSCTable(void);
-
-
+// TODO reimplemente with LUA
+//DefScriptFunctionTable *_GetSCTable(void);
 
 #endif

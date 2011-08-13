@@ -2,7 +2,6 @@
 #include <readline/history.h>
 
 #include "common.h"
-#include "DefScript/DefScript.h"
 #include "PseuWoW.h"
 #include "Cli.h"
 

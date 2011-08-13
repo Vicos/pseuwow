@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include "common.h"
 
 #include "Auth/Sha1.h"
@@ -36,7 +38,8 @@ WorldSession::WorldSession(PseuInstance *in)
     _lag_ms = 0;
     //...
 
-    in->GetScripts()->RunScriptIfExists("_onworldsessioncreate");
+	// TODO reimplemente with LUA
+    //in->GetScripts()->RunScriptIfExists("_onworldsessioncreate");
 
     DEBUG(logdebug("WorldSession 0x%X constructor finished",this));
 }
@@ -61,7 +64,8 @@ WorldSession::~WorldSession()
         logdebug("~WorldSession(): ... world GUI deleted, continuing to close session");
     }
 
-    _instance->GetScripts()->RunScriptIfExists("_onworldsessiondelete");
+	// TODO reimplemente with LUA
+    //_instance->GetScripts()->RunScriptIfExists("_onworldsessiondelete");
 
     logdebug("~WorldSession(): %u packets left unhandled, and %u delayed. deleting.",pktQueue.size(),delayedPktQueue.size());
     WorldPacket *packet;
@@ -177,7 +181,8 @@ void WorldSession::Update(void)
 // this func will delete the WorldPacket after it is handled!
 void WorldSession::HandleWorldPacket(WorldPacket *packet)
 {
-    static DefScriptPackage *sc = GetInstance()->GetScripts();
+    // TODO reimplemente with LUA
+	//static DefScriptPackage *sc = GetInstance()->GetScripts();
     static OpcodeHandler *table = _GetOpcodeHandlerTable();
 
     bool known = false;
@@ -225,14 +230,15 @@ void WorldSession::HandleWorldPacket(WorldPacket *packet)
         // note: the pkt rpos needs to be reset by the scripts!
         std::string scname = "opcode::";
         scname += stringToLower(GetOpcodeName(packet->GetOpcode()));
-        if(sc->ScriptExists(scname))
+		// TODO reimplemente with LUA
+		/* if(sc->ScriptExists(scname))
         {
             std::string pktname = "PACKET::";
             pktname += GetOpcodeName(packet->GetOpcode());
             GetInstance()->GetScripts()->bytebuffers.Assign(pktname,packet);
             sc->RunScript(scname,NULL);
             GetInstance()->GetScripts()->bytebuffers.Unlink(pktname);
-        }
+        } */
 
         // call the opcode handler
         if(known && !disabledOpcode)
@@ -411,8 +417,9 @@ void WorldSession::_OnEnterWorld(void)
     if(!InWorld())
     {
         _logged=true;
-        GetInstance()->GetScripts()->variables.Set("@inworld","true");
-        GetInstance()->GetScripts()->RunScriptIfExists("_enterworld");
+		// TODO reimplemente with LUA
+        //GetInstance()->GetScripts()->variables.Set("@inworld","true");
+        //GetInstance()->GetScripts()->RunScriptIfExists("_enterworld");
 
     }
 }
@@ -422,8 +429,9 @@ void WorldSession::_OnLeaveWorld(void)
     if(InWorld())
     {
         _logged=false;
-        GetInstance()->GetScripts()->RunScriptIfExists("_leaveworld");
-        GetInstance()->GetScripts()->variables.Set("@inworld","false");
+		// TODO reimplemente with LUA
+        //GetInstance()->GetScripts()->RunScriptIfExists("_leaveworld");
+        //GetInstance()->GetScripts()->variables.Set("@inworld","false");
     }
 }
 
@@ -719,8 +727,9 @@ void WorldSession::EnterWorldWithCharacter(std::string name)
         {
             _myGUID = it->p._guid;
             charex = *it;
-            GetInstance()->GetScripts()->variables.Set("@myguid",DefScriptTools::toString(_myGUID));
-            GetInstance()->GetScripts()->variables.Set("@myrace",DefScriptTools::toString(it->p._race));
+			// TODO reimplemente with LUA
+            //GetInstance()->GetScripts()->variables.Set("@myguid",DefScriptTools::toString(_myGUID));
+            //GetInstance()->GetScripts()->variables.Set("@myrace",DefScriptTools::toString(it->p._race));
         }
     }
     if(!_myGUID)
@@ -886,8 +895,9 @@ void WorldSession::_HandleMessageChatOpcode(WorldPacket& recvPacket)
             return; // handle later
         }
     }
-    GetInstance()->GetScripts()->variables.Set("@thismsg_name",name);
-    GetInstance()->GetScripts()->variables.Set("@thismsg",DefScriptTools::toString(source_guid));
+	// TODO reimplemente with LUA
+    //GetInstance()->GetScripts()->variables.Set("@thismsg_name",name);
+    //GetInstance()->GetScripts()->variables.Set("@thismsg",DefScriptTools::toString(source_guid));
 
 
     DEBUG(logdebug("Chat packet recieved, type=%u lang=%u src="I64FMT" dst="I64FMT" chn='%s' len=%u",
@@ -943,7 +953,8 @@ void WorldSession::_HandleMessageChatOpcode(WorldPacket& recvPacket)
     if(source_guid != GetGuid() && msg.length() > 1 && msg.at(0) == '-' && GetInstance()->GetConf()->allowgamecmd)
         isCmd = true;
 
-    if(!isCmd && GetInstance()->GetScripts()->GetScript("_onchatmessage"))
+	// TODO reimplemente with LUA
+    /* if(!isCmd && GetInstance()->GetScripts()->GetScript("_onchatmessage"))
     {
         CmdSet Set;
         Set.arg[0] = DefScriptTools::toString(type);
@@ -952,9 +963,10 @@ void WorldSession::_HandleMessageChatOpcode(WorldPacket& recvPacket)
         Set.arg[3] = channel;
         Set.defaultarg = GetInstance()->GetScripts()->SecureString(msg);
         GetInstance()->GetScripts()->RunScript("_onchatmessage",&Set);
-    }
+    } */
 
-    if(isCmd)
+	// TODO reimplemente with LUA
+    /* if(isCmd)
     {
         GetInstance()->GetScripts()->variables.Set("@thiscmd_name",name);
         GetInstance()->GetScripts()->variables.Set("@thiscmd",DefScriptTools::toString(source_guid));
@@ -968,7 +980,7 @@ void WorldSession::_HandleMessageChatOpcode(WorldPacket& recvPacket)
             SendChatMessage(CHAT_MSG_SAY,0,"Exception while trying to execute: [ "+lin+" ]","");
         }
 
-    }
+    } */
 
     // the following block searches for items in chat and queries them if they are unknown
     if(!isCmd && source_guid != GetGuid() && msg.length() > strlen(CHAT_ITEM_BEGIN_STRING))
@@ -1247,7 +1259,8 @@ void WorldSession::_HandleTelePortAckOpcode(WorldPacket& recvPacket)
         my->SetPosition(x,y,z,o);
     }
 
-    if(GetInstance()->GetScripts()->ScriptExists("_onteleport"))
+	// TODO reimplemente with LUA
+    /* if(GetInstance()->GetScripts()->ScriptExists("_onteleport"))
     {
         CmdSet Set;
         Set.defaultarg = "false"; // teleported to other map = false
@@ -1258,7 +1271,7 @@ void WorldSession::_HandleTelePortAckOpcode(WorldPacket& recvPacket)
         Set.arg[4] = DefScriptTools::toString(o);
         Set.arg[5] = DefScriptTools::toString(flags);
         GetInstance()->GetScripts()->RunScriptIfExists("_onteleport");
-    }
+    } */
 }
 
 void WorldSession::_HandleNewWorldOpcode(WorldPacket& recvPacket)
@@ -1306,8 +1319,8 @@ void WorldSession::_HandleNewWorldOpcode(WorldPacket& recvPacket)
     }
 
     // TODO: need to switch to SCENESTATE_LOGINSCREEN here, and after everything is loaded, back to SCENESTATE_WORLD
-
-    if(GetInstance()->GetScripts()->ScriptExists("_onteleport"))
+	// TODO reimplemente with LUA
+    /* if(GetInstance()->GetScripts()->ScriptExists("_onteleport"))
     {
         CmdSet Set;
         Set.defaultarg = "true"; // teleported to other map = false
@@ -1317,7 +1330,7 @@ void WorldSession::_HandleNewWorldOpcode(WorldPacket& recvPacket)
         Set.arg[3] = DefScriptTools::toString(z);
         Set.arg[4] = DefScriptTools::toString(o);
         GetInstance()->GetScripts()->RunScriptIfExists("_onteleport");
-    }
+    } */
 }
 
 void WorldSession::_HandleChannelNotifyOpcode(WorldPacket& recvPacket)

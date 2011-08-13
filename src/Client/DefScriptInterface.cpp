@@ -1,8 +1,6 @@
 #include <stdarg.h>
 #include "common.h"
 #include "PseuWoW.h"
-#include "DefScript/DefScript.h"
-#include "DefScript/DefScriptTools.h"
 #include "Player.h"
 #include "Opcodes.h"
 #include "SharedDefines.h"
@@ -12,6 +10,7 @@
 #include "SCPDatabase.h"
 #include "MemoryDataHolder.h"
 
+#if FALSE
 
 void DefScriptPackage::_InitDefScriptInterface(void)
 {
@@ -1343,5 +1342,4 @@ void DefScriptPackage::my_print_debug(const char *fmt, ...)
     logdebug(buf);
 }
 
-
-
+#endif

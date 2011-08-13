@@ -174,13 +174,14 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
 
 
                 // call script "_OnObjectCreate"
-                if(GetInstance()->GetScripts()->ScriptExists("_onobjectcreate"))
+				// TODO reimplemente with LUA
+                /* if(GetInstance()->GetScripts()->ScriptExists("_onobjectcreate"))
                 {
                     CmdSet Set;
                     Set.defaultarg = toString(uguid);
                     Set.arg[0] = toString(objtypeid);
                     GetInstance()->GetScripts()->RunScript("_onobjectcreate", &Set);
-                }
+                } */
 
                 // if our own character got finally created, we have successfully entered the world,
                 // and should have gotten all info about our char already.
@@ -196,7 +197,8 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
                     logdebug("GUID "I64FMT" out of range",uguid);
 
                     // call script just before object removal
-                    if(GetInstance()->GetScripts()->ScriptExists("_onobjectdelete"))
+					// TODO reimplemente with LUA
+                    /* if(GetInstance()->GetScripts()->ScriptExists("_onobjectdelete"))
                     {
                         Object *del_obj = objmgr.GetObj(uguid);
                         CmdSet Set;
@@ -204,7 +206,7 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
                         Set.arg[0] = del_obj ? toString(del_obj->GetTypeId()) : "";
                         Set.arg[1] = "true"; // out of range = true
                         GetInstance()->GetScripts()->RunScript("_onobjectdelete", &Set);
-                    }
+                    } */
 
                     objmgr.Remove(uguid, false);
                 }
