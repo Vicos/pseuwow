@@ -9,12 +9,19 @@ LuaPackage::LuaPackage(PseuInstance *parent) :
 {
 	_L = luaL_newstate();
 	luaL_openlibs(_L);
+	lua_register(_L,"abort",LuaPackage::luafn_quit);
 	lua_register(_L,"quit",LuaPackage::luafn_quit);
 }
 
 LuaPackage::~LuaPackage()
 {
 	lua_close(_L);
+}
+
+int LuaPackage::luafn_abort(lua_State *L)
+{
+	InstanceList::get()->abortproc();
+	return 0;
 }
 
 int LuaPackage::luafn_quit(lua_State *L)

@@ -18,6 +18,7 @@ class LuaPackage
 		lua_State* getLuaVM(void) { return _L; };
 
 	private:
+		static int luafn_abort(lua_State *L);
 		static int luafn_quit(lua_State *L);
 
 	private:
