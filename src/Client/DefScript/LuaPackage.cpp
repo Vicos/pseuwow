@@ -1,4 +1,5 @@
-#include "LuaPackage.hpp"
+#include <lua.hpp>
+#include "LuaPackage.h"
 
 LuaPackage::LuaPackage()
 {

@@ -393,8 +393,7 @@ void PseuInstance::ProcessCliQueue(void)
         cmd = _cliQueue.next();
         try
         {
-			// TODO reimplement with LUA
-            //GetScripts()->RunSingleLine(cmd);
+            GetScript()->dostring(cmd.c_str());
         }
         catch(...)
         {

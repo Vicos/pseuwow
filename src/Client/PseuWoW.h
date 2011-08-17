@@ -6,7 +6,7 @@
 #include "HelperDefs.h"
 #include "log.h"
 #include "Auth/BigNumber.h"
-#include "DefScript/LuaPackage.hpp"
+#include "DefScript/LuaPackage.h"
 #include "DefScript/VarSet.h"
 #include "Network/SocketHandler.h"
 #include "SCPDatabase.h"

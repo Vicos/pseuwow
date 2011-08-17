@@ -15,15 +15,14 @@ AC_PROG_LIBTOOL
 LT_INIT
 
 # Checks for libraries.
-AC_CHECK_LIB([ssl], [main], [], AC_MSG_ERROR(ssl library not found.) )
-AC_CHECK_LIB([crypto], [main], [], AC_MSG_ERROR(ssl crypto library not found.))
 AC_CHECK_LIB([bz2], [main], [], AC_MSG_ERROR(bzip2 library not found.))
-AC_CHECK_LIB([lua5.1], [luaL_newstate], [], AC_MSG_ERROR(lua library not found.))
 
 AC_CHECK_LIB([readline], [readline],
   [AC_DEFINE([HAVE_READLINE],[1],[Define to 1 if you have the readline library.])],
   AC_MSG_WARN(readline library not found.))
 AM_CONDITIONAL(HAVE_READLINE, test "x$ac_cv_lib_readline_readline" = "xyes")
+
+PKG_CHECK_MODULES(PSEUWOW, [libssl libcrypto lua5.1 ])
 
 # Checks for header files.
 AC_PATH_X

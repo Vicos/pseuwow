@@ -11,7 +11,7 @@ AM_CPPFLAGS =   -I$(top_builddir)/src/Client \
                 -I$(top_builddir)/src/Client/World \
                 -I$(top_builddir)/src/Client/Realm \
                 -I$(top_builddir)/src/dep/include \
-                -Wall
+                $(PSEUWOW_CFLAGS) -Wall
 
 ## Build pseuwow
 bin_PROGRAMS = pseuwow
@@ -36,7 +36,7 @@ pseuwow_LDADD =     ../shared/libshared.a \
 				    ../dep/src/zlib/libzlib.a \
 				    ../dep/src/zthread/libZThread.a \
 				    ../dep/src/StormLib/libstormlib.a \
-				    -lbz2
+				    $(PSEUWOW_LIBS) -lbz2
 
 if HAVE_READLINE
 pseuwow_LDADD 	+=	-lreadline
