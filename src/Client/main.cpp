@@ -4,9 +4,7 @@
 #include "main.h"
 #include "PseuWoW.h"
 #include "MemoryDataHolder.h"
-
-
-std::list<PseuInstanceRunnable*> instanceList; // TODO: move this to a "Master" class later
+#include "InstanceList.h"
 
 
 void _HookSignals(void)
@@ -38,7 +36,7 @@ void _OnSignal(int s)
         case SIGINT:
         case SIGQUIT:
         case SIGTERM:
-            quitproc();            
+            InstanceList::get()->quitproc();
             break;
         case SIGABRT:
         #ifndef _DEBUG
@@ -47,29 +45,10 @@ void _OnSignal(int s)
         #ifdef _WIN32
         case SIGBREAK:
         #endif
-            abortproc();
+            InstanceList::get()->abortproc();
             break;
     }
     signal(s, _OnSignal);
-}
-
-void quitproc(void)
-{
-    log("Waiting for all instances to finish... [%u]\n",instanceList.size());
-    for(std::list<PseuInstanceRunnable*>::iterator i=instanceList.begin();i!=instanceList.end();i++)
-    {
-        (*i)->GetInstance()->Stop();
-    }
-}
-
-void abortproc(void)
-{
-    log("Terminating all instances... [%u]\n",instanceList.size());
-    for(std::list<PseuInstanceRunnable*>::iterator i=instanceList.begin();i!=instanceList.end();i++)
-    {
-        (*i)->GetInstance()->SetFastQuit(true);
-        (*i)->GetInstance()->Stop();
-    }
 }
 
 void _new_handler(void)
@@ -98,20 +77,20 @@ int main(int argc, char* argv[])
         logcustom(0,GREEN,"Platform: %s",PLATFORM_NAME);
         logcustom(0,GREEN,"Compiler: %s ("COMPILER_VERSION_OUT")",COMPILER_NAME,COMPILER_VERSION);
         logcustom(0,GREEN,"Compiled: %s  %s",__DATE__,__TIME__);
-        
-        _HookSignals();
-        MemoryDataHolder::Init();
 
-        // 1 instance is enough for now
+        MemoryDataHolder::Init();
+        _HookSignals();
+		
         PseuInstanceRunnable *r=new PseuInstanceRunnable();
         ZThread::Thread t(r);
-        instanceList.push_back(r);
+        InstanceList::get()->push(r);
         t.setPriority((ZThread::Priority)2);
-        //...
+
         t.wait();
-        //...
+
+		_UnhookSignals();
         MemoryDataHolder::Shutdown();
-        _UnhookSignals();
+
         raise(SIGQUIT);
 		log_close();
         return 0;

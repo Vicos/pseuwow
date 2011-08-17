@@ -116,7 +116,7 @@ bool PseuInstance::Init(void)
     srand((unsigned)time(NULL));
     RAND_set_rand_method(RAND_SSLeay()); // init openssl randomizer
 
-    _script = new LuaPackage();
+    _script = new LuaPackage(this);
     _conf = new PseuInstanceConf();
 
     CreateDir("cache");

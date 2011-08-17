@@ -1,16 +1,24 @@
+#include "common.h"
 #include <lua.hpp>
+#include "InstanceList.h"
+#include "PseuWoW.h"
 #include "LuaPackage.h"
 
-LuaPackage::LuaPackage()
+LuaPackage::LuaPackage(PseuInstance *parent) :
+  _parent(parent)
 {
-	this->luaVM = luaL_newstate();
-	/* if( luaVM == NULL )
-		logcritical ("Lua machine can't initialize");
-		*/
-	luaL_openlibs(this->luaVM);
+	_L = luaL_newstate();
+	luaL_openlibs(_L);
+	lua_register(_L,"quit",LuaPackage::luafn_quit);
 }
 
 LuaPackage::~LuaPackage()
 {
-	lua_close(this->luaVM);
+	lua_close(_L);
+}
+
+int LuaPackage::luafn_quit(lua_State *L)
+{
+	InstanceList::get()->quitproc();
+	return 0;
 }

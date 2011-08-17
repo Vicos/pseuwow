@@ -19,6 +19,7 @@ pseuwow_SOURCES = 	DefScriptInterface.cpp\
 			        MemoryDataHolder.cpp\
 			        RemoteController.cpp\
 			        ControlSocket.cpp\
+			        InstanceList.cpp\
 			        main.cpp\
 			        PseuWoW.cpp\
 			        SCPDatabase.cpp\

@@ -3,21 +3,26 @@
 
 #include <string>
 #include <lua.hpp>
+#include "PseuWoW.h"
+
+class PseuInstance;
 
 class LuaPackage
 {
 	public:
-		LuaPackage();
+		LuaPackage(PseuInstance *parent);
 		~LuaPackage();
 
-		int dostring(const char *str) { return luaL_dostring(this->luaVM,str); };
+		int dostring(const char *str) { return luaL_dostring(_L,str); };
 		
-		lua_State* getLuaVM(void) { return this->luaVM; };
+		lua_State* getLuaVM(void) { return _L; };
 
 	private:
+		static int luafn_quit(lua_State *L);
 
 	private:
-		lua_State* luaVM;
+		PseuInstance *_parent;
+		lua_State* _L;
 };
 
 #endif

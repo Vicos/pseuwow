@@ -4,6 +4,7 @@ AM_CPPFLAGS = 	-I$(top_builddir)/src/Client \
 				-I$(top_builddir)/src/Client/DefScript \
 				-I$(top_builddir)/src/Client/World \
 				-I$(top_builddir)/src/Client/Realm \
+				-I$(top_builddir)/src/dep/include \
 				$(PSEUWOW_CFLAGS) -Wall
 
 ## Build pseuwow
