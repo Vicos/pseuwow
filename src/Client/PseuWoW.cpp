@@ -130,7 +130,8 @@ bool PseuInstance::Init(void)
     //_scp->variables.Set("@version",_ver);
     //_scp->variables.Set("@inworld","false");
 
-    // TODO: execute LUA startup func
+	log("Starting script init.lua");
+    _script->dofile("init.lua");
 
     // TODO: find a better loaction where to place this block!
     if(GetConf()->enablegui)
@@ -495,6 +496,7 @@ PseuInstanceConf::PseuInstanceConf()
     showmyopcodes = false;
     disablespellcheck = true;
     useMPQ = false;
+	log_setlogtime(true);
 }
 
 void PseuInstanceConf::ApplyFromVarSet(VarSet &v)
