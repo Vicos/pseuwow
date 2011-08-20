@@ -20,6 +20,32 @@ LuaPackage::~LuaPackage()
 	lua_close(_L);
 }
 
+int LuaPackage::dostring(const char *str)
+{
+	int r = ( luaL_loadstring(_L,str) || lua_pcall(_L, 0, LUA_MULTRET, 0) != 0 );
+	
+	if( r != 0 && lua_isstring(_L,-1) )
+	{
+		const char* errormsg = lua_tostring(_L,-1);
+		logerror("Lua error:\n%s", errormsg);
+	}
+	
+	return 0;
+}
+
+int LuaPackage::dofile(const char *filename)
+{
+	int r = ( luaL_loadfile(_L,filename) || lua_pcall(_L, 0, LUA_MULTRET, 0) != 0 );
+	
+	if( r != 0 && lua_isstring(_L,-1) )
+	{
+		const char* errormsg = lua_tostring(_L,-1);
+		logerror("Lua error:\n%s", errormsg);
+	}
+	
+	return 0;
+}
+
 int LuaPackage::luafn_abort(lua_State *L)
 {
 	InstanceList::get()->abortproc();

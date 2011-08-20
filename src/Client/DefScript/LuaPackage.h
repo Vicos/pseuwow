@@ -13,8 +13,8 @@ class LuaPackage
 		LuaPackage(PseuInstance *parent);
 		~LuaPackage();
 
-		int dostring(const char *str) { return luaL_dostring(_L,str); };
-		int dofile(const char *filename) { return luaL_dofile (_L,filename); };
+		int dostring(const char *str);
+		int dofile(const char *filename);
 		
 		lua_State* getLuaVM(void) { return _L; };
 
