@@ -10,7 +10,7 @@ LuaPackage::LuaPackage(PseuInstance *parent) :
 {
 	_L = luaL_newstate();
 	luaL_openlibs(_L);
-	lua_register(_L,"abort",LuaPackage::luafn_quit);
+	lua_register(_L,"abort",LuaPackage::luafn_abort);
 	lua_register(_L,"print",LuaPackage::luafn_print);
 	lua_register(_L,"quit",	LuaPackage::luafn_quit);
 }
